@@ -43,7 +43,7 @@ export default function NewsletterCard() {
   useEffect(() => {
     setTimeout(() => {
       handleOpen();
-    }, 150000000);
+    }, 60000);
   }, []);
 
   return (
@@ -63,7 +63,7 @@ export default function NewsletterCard() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <Button onClick={() => mutateAsync(email)} disabled={isPending}>
+          <Button onClick={() => mutateAsync(email)} disabled={isPending} className="bg-yellow-400">
             {isPending ? "Loading..." : "Subscribe"}
           </Button>
         </div>
