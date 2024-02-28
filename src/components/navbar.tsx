@@ -1,24 +1,31 @@
-import Link from "next/link";
-import ThemeToggler from "./theme-toggler";
-import { Button } from "./ui/button";
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { getBlogName } from "@/lib/requests";
+import Link from 'next/link'
+import ThemeToggler from './theme-toggler'
+import { Button } from './ui/button'
+import { GitHubLogoIcon } from '@radix-ui/react-icons'
+import { getBlogName } from '@/lib/requests'
+import Image from 'next/image'
+import PublicationLogo from './PublicationLogo'
+import HamburgerDropdown from './HamburgerDropdown'
 
-const GITHUB_URL = "https://github.com/atharvadeosthale/hashnode-headless-blog";
+const GITHUB_URL = 'https://github.com/reezayn/blog-rijan'
 
 export default async function Navbar() {
-  const title = await getBlogName();
+  const blogBrandDetails = await getBlogName()
 
   return (
-    <div className="w-full border-b mb-5">
-      <div className="max-w-7xl w-full px-3 xl:p-0 my-5 mx-auto flex justify-between items-center">
+    <div className="w-full border-b mb-5 ">
+      <div className="max-w-[1200px] mx-auto px-3 xl:p-0 my-5 flex justify-between items-center">
         <div className="text-xl font-bold">
-          <Link href="/">{title.displayTitle || title.title}</Link>
+          {/* <Link href="/">{blogBrandDetails.displayTitle || blogBrandDetails.title}</Link> */}
+          <Link href="/">
+            <PublicationLogo blogBrandDetails={blogBrandDetails} />
+          </Link>
         </div>
         <div className="flex items-center gap-5">
           <ThemeToggler />
+          <HamburgerDropdown blogBrandDetails={blogBrandDetails} />
 
-          <Button variant="secondary">
+          {/* <Button variant="secondary">
             <Link
               className="gap-2 flex items-center"
               href={GITHUB_URL}
@@ -26,9 +33,9 @@ export default async function Navbar() {
             >
               <GitHubLogoIcon /> GitHub
             </Link>
-          </Button>
+          </Button> */}
         </div>
       </div>
     </div>
-  );
+  )
 }

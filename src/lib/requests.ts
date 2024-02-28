@@ -1,15 +1,15 @@
-import request, { gql } from "graphql-request";
-import { env } from "./env";
+import request, { gql } from 'graphql-request'
+import { env } from './env'
 import {
   GetPostsArgs,
   GetPostsResponse,
   SubscribeToNewsletterResponse,
   PublicationName,
   GetPostBySlugResponse,
-} from "./types";
+} from './types'
 
-const endpoint = env.NEXT_PUBLIC_HASHNODE_ENDPOINT;
-const publicationId = env.NEXT_PUBLIC_HASHNODE_PUBLICATION_ID;
+const endpoint = env.NEXT_PUBLIC_HASHNODE_ENDPOINT
+const publicationId = env.NEXT_PUBLIC_HASHNODE_PUBLICATION_ID
 
 export async function getBlogName() {
   const query = gql`
@@ -18,22 +18,54 @@ export async function getBlogName() {
         title
         displayTitle
         favicon
+        author {
+          name
+          socialMediaLinks {
+            instagram
+            facebook
+            linkedin
+            github
+            youtube
+          }
+        }
+        preferences {
+          logo
+          darkMode {
+            logo
+          }
+        }
       }
     }
-  `;
+  `
 
   const response = await request<PublicationName>(endpoint, query, {
     publicationId,
-  });
+  })
 
   return {
     title: response.publication.title,
     displayTitle: response.publication.displayTitle,
     favicon: response.publication.favicon,
-  };
+    author: {
+      name: response.publication.author.name,
+      socialMediaLinks: {
+        instagram: response.publication.author.socialMediaLinks.instagram,
+        facebook: response.publication.author.socialMediaLinks.facebook,
+        linkedin: response.publication.author.socialMediaLinks.linkedin,
+        github: response.publication.author.socialMediaLinks.github,
+        youtube: response.publication.author.socialMediaLinks.youtube,
+      },
+    },
+    preferences: {
+      logo: response.publication.preferences.logo,
+      darkMode: {
+        logo: response.publication.preferences.darkMode?.logo,
+      },
+    },
+  }
 }
 
-export async function getPosts({ first = 9, pageParam = "" }: GetPostsArgs) {
+export async function getPosts({ first = 9, pageParam = '' }: GetPostsArgs) {
   const query = gql`
     query getPosts($publicationId: ObjectId!, $first: Int!, $after: String) {
       publication(id: $publicationId) {
@@ -44,6 +76,9 @@ export async function getPosts({ first = 9, pageParam = "" }: GetPostsArgs) {
               title
               subtitle
               slug
+              readTimeInMinutes
+              views
+              publishedAt
               content {
                 text
               }
@@ -60,15 +95,15 @@ export async function getPosts({ first = 9, pageParam = "" }: GetPostsArgs) {
         }
       }
     }
-  `;
+  `
 
   const response = await request<GetPostsResponse>(endpoint, query, {
     publicationId,
     first,
     after: pageParam,
-  });
+  })
 
-  return response.publication.posts.edges;
+  return response.publication.posts.edges
 }
 
 export async function subscribeToNewsletter(email: string) {
@@ -80,7 +115,7 @@ export async function subscribeToNewsletter(email: string) {
         status
       }
     }
-  `;
+  `
 
   const response = await request<SubscribeToNewsletterResponse>(
     endpoint,
@@ -89,9 +124,9 @@ export async function subscribeToNewsletter(email: string) {
       publicationId,
       email,
     }
-  );
+  )
 
-  return response;
+  return response
 }
 
 export async function getPostBySlug(slug: string) {
@@ -101,6 +136,9 @@ export async function getPostBySlug(slug: string) {
         post(slug: $slug) {
           title
           subtitle
+          readTimeInMinutes
+          views
+          publishedAt
           coverImage {
             url
           }
@@ -114,12 +152,12 @@ export async function getPostBySlug(slug: string) {
         }
       }
     }
-  `;
+  `
 
   const response = await request<GetPostBySlugResponse>(endpoint, query, {
     publicationId,
     slug,
-  });
+  })
 
-  return response.publication.post;
+  return response.publication.post
 }

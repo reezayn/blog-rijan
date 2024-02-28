@@ -1,4 +1,4 @@
-import { Inter } from "next/font/google";
+import {Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar";
 import Providers from "@/components/providers";
@@ -6,7 +6,7 @@ import NewsletterCard from "@/components/newsletter-card";
 import Footer from "@/components/footer";
 import { getBlogName } from "@/lib/requests";
 
-const inter = Inter({ subsets: ["latin"] });
+const pjs = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
 export async function generateMetadata() {
   const data = await getBlogName();
@@ -28,7 +28,7 @@ export default async function RootLayout({
       <head>
         <link rel="icon" href={data.favicon || "/favicon.ico"} />
       </head>
-      <body className={inter.className}>
+      <body className={pjs.className}>
         <Providers>
           <Navbar />
           {children}

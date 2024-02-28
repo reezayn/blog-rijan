@@ -43,7 +43,7 @@ export default function NewsletterCard() {
   useEffect(() => {
     setTimeout(() => {
       handleOpen();
-    }, 5000);
+    }, 150000000);
   }, []);
 
   return (
